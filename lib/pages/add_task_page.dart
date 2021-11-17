@@ -3,17 +3,12 @@ import 'package:my_first_app/pages/home_page.dart';
 import 'home_page.dart';
 import 'package:provider/provider.dart';
 
-class AddTaskPage extends StatefulWidget {
-  @override
-  _AddTaskPageState createState() => _AddTaskPageState();
-}
-
-class _AddTaskPageState extends State<AddTaskPage> {
-  String textField = "";
-  final _formKey = GlobalKey<FormState>();
+class AddTaskPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var homePageProvider = Provider.of<HomePageProvider>(context);
+    print('add task page built');
+    var homePageState = Provider.of<HomePageState>(context);
+    var addTaskProvider = Provider.of<AddTaskPageState>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -22,14 +17,14 @@ class _AddTaskPageState extends State<AddTaskPage> {
         backgroundColor: Colors.green[300],
       ),
       body: Form(
-        key: _formKey,
+        key: addTaskProvider.getFormKey,
         child: Column(
           children: <Widget>[
             Container(
               margin: const EdgeInsets.all(30),
               child: TextFormField(
                 validator: (textField) {
-                  if (textField == null || textField.isEmpty) {
+                  if (addTaskProvider.textFieldIsEmpty(textField!)) {
                     return 'Please Enter Some Text';
                   }
                 },
@@ -37,15 +32,15 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     hintText: 'What are you going to do?',
                     border: OutlineInputBorder()),
                 onChanged: (todo) {
-                  setState(() => textField = todo);
-                  _formKey.currentState!.validate();
+                  addTaskProvider.setTextField(todo);
+                  addTaskProvider.validateFormState();
                 },
               ),
             ),
             TextButton.icon(
               onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  homePageProvider.addTask(textField);
+                if (addTaskProvider.validateFormState()) {
+                  homePageState.addTask(addTaskProvider.getTextField);
                   Navigator.of(context).pop();
                 }
               },
@@ -59,5 +54,26 @@ class _AddTaskPageState extends State<AddTaskPage> {
         ),
       ),
     );
+  }
+}
+
+class AddTaskPageState with ChangeNotifier {
+  String _textField = "";
+  final _formKey = GlobalKey<FormState>();
+
+  String get getTextField => _textField;
+
+  GlobalKey<FormState> get getFormKey => _formKey;
+
+  bool textFieldIsEmpty(String textField) {
+    return textField.isEmpty;
+  }
+
+  setTextField(todo) {
+    _textField = todo;
+  }
+
+  validateFormState() {
+    return _formKey.currentState!.validate();
   }
 }

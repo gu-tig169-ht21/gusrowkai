@@ -6,7 +6,8 @@ import '../components/task.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var homePageProvider = Provider.of<HomePageProvider>(context);
+    print('home page built');
+    var homePageProvider = Provider.of<HomePageState>(context);
 
     return Scaffold(
         appBar: AppBar(
@@ -33,7 +34,7 @@ class HomePage extends StatelessWidget {
             ? Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Text('No Added Tasks')],
+                  children: const [Text('No Added Tasks')],
                 ),
               )
             : TaskList(
@@ -42,15 +43,10 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class HomePageProvider with ChangeNotifier {
+class HomePageState with ChangeNotifier {
   final List<Task> _tasks = [];
 
   List<Task> get getTasks => _tasks;
-
-  setCheck(value, task) {
-    task.checkBoxValue = value;
-    notifyListeners();
-  }
 
   onDelete(task) {
     _tasks.remove(task);

@@ -10,7 +10,11 @@ class TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var homePageProvider = Provider.of<HomePageProvider>(context);
+    print('task tile built');
+
+    var homePageProvider = Provider.of<HomePageState>(context);
+
+    var taskProvider = Provider.of<TaskState>(context);
 
     return ListTile(
       title: Text.rich(TextSpan(
@@ -25,7 +29,7 @@ class TaskTile extends StatelessWidget {
         child: Checkbox(
             value: task.checkBoxValue,
             onChanged: (value) {
-              homePageProvider.setCheck(value, task);
+              taskProvider.setCheck(value, task);
             }),
       ),
       trailing: IconButton(

@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:my_first_app/pages/home_page.dart';
 import 'home_page.dart';
 import 'package:provider/provider.dart';
+import '../pages/home_page.dart';
 
 class AddTaskPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print('add task page built');
-    var homePageState = Provider.of<HomePageState>(context);
-    var addTaskProvider = Provider.of<AddTaskPageState>(context);
+    var myStateProvider = Provider.of<MyState>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -16,64 +15,45 @@ class AddTaskPage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.green[300],
       ),
-      body: Form(
-        key: addTaskProvider.getFormKey,
-        child: Column(
-          children: <Widget>[
-            Container(
-              margin: const EdgeInsets.all(30),
-              child: TextFormField(
-                validator: (textField) {
-                  if (addTaskProvider.textFieldIsEmpty(textField!)) {
-                    return 'Please Enter Some Text';
+      body: Consumer<MyState>(
+        builder: (context, value, child) => Form(
+          key: value.getFormKey,
+          child: Column(
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.all(30),
+                child: TextFormField(
+                  validator: (textField) {
+                    if (value.textFieldIsEmpty(textField!)) {
+                      return 'Please Enter Some Text';
+                    }
+                  },
+                  decoration: const InputDecoration(
+                      hintText: 'What are you going to do?',
+                      border: OutlineInputBorder()),
+                  onChanged: (todo) {
+                    myStateProvider.setTextField(todo);
+                    value.validateFormState();
+                  },
+                ),
+              ),
+              TextButton.icon(
+                onPressed: () {
+                  if (value.validateFormState()) {
+                    myStateProvider.addTask(value.getTextField);
+                    Navigator.of(context).pop();
                   }
                 },
-                decoration: const InputDecoration(
-                    hintText: 'What are you going to do?',
-                    border: OutlineInputBorder()),
-                onChanged: (todo) {
-                  addTaskProvider.setTextField(todo);
-                  addTaskProvider.validateFormState();
-                },
-              ),
-            ),
-            TextButton.icon(
-              onPressed: () {
-                if (addTaskProvider.validateFormState()) {
-                  homePageState.addTask(addTaskProvider.getTextField);
-                  Navigator.of(context).pop();
-                }
-              },
-              icon: const Icon(Icons.add),
-              label: const Text('Add'),
-              style: TextButton.styleFrom(
-                primary: Colors.green[300],
-              ),
-            )
-          ],
+                icon: const Icon(Icons.add),
+                label: const Text('Add'),
+                style: TextButton.styleFrom(
+                  primary: Colors.green[300],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
-  }
-}
-
-class AddTaskPageState with ChangeNotifier {
-  String _textField = "";
-  final _formKey = GlobalKey<FormState>();
-
-  String get getTextField => _textField;
-
-  GlobalKey<FormState> get getFormKey => _formKey;
-
-  bool textFieldIsEmpty(String textField) {
-    return textField.isEmpty;
-  }
-
-  setTextField(todo) {
-    _textField = todo;
-  }
-
-  validateFormState() {
-    return _formKey.currentState!.validate();
   }
 }

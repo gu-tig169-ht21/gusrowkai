@@ -6,9 +6,6 @@ import '../components/task.dart';
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print('home page built');
-    var homePageProvider = Provider.of<HomePageState>(context);
-
     return Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -30,20 +27,21 @@ class HomePage extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-        body: homePageProvider.getTasks.isEmpty
-            ? Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [Text('No Added Tasks')],
-                ),
-              )
-            : TaskList(
-                homePageProvider.getTasks,
-              ));
+        body: Consumer<MyState>(
+            builder: (context, value, child) => value.getTasks.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [Text('No Added Tasks')],
+                    ),
+                  )
+                : TaskList(
+                    value.getTasks,
+                  )));
   }
 }
 
-class HomePageState with ChangeNotifier {
+class MyState with ChangeNotifier {
   final List<Task> _tasks = [];
 
   List<Task> get getTasks => _tasks;
@@ -56,5 +54,29 @@ class HomePageState with ChangeNotifier {
   addTask(task) {
     _tasks.add(Task(text: task));
     notifyListeners();
+  }
+
+  setCheck(value, task) {
+    task.checkBoxValue = value;
+    notifyListeners();
+  }
+
+  String _textField = "";
+  final _formKey = GlobalKey<FormState>();
+
+  String get getTextField => _textField;
+
+  GlobalKey<FormState> get getFormKey => _formKey;
+
+  bool textFieldIsEmpty(String textField) {
+    return textField.isEmpty;
+  }
+
+  setTextField(todo) {
+    _textField = todo;
+  }
+
+  validateFormState() {
+    return _formKey.currentState!.validate();
   }
 }

@@ -1,52 +1,23 @@
 import 'package:flutter/material.dart';
-import 'task.dart';
+import 'pages/home_page.dart';
+import 'pages/add_task_page.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MaterialApp(
-    home: Tasks(),
-    debugShowCheckedModeBanner: false,
-  ));
+  runApp(MyApp());
 }
 
-class Tasks extends StatelessWidget {
-  List<String> tasks = List.generate(30, (index) => 'ListItem #$index');
-
-  @override
+class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'TIG169 TODO',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.grey[500],
-        elevation: 0,
+    return ChangeNotifierProvider(
+      create: (context) => MyState(),
+      child: MaterialApp(
+        routes: {
+          '/': (context) => HomePage(),
+          '/addtask': (context) => AddTaskPage()
+        },
+        debugShowCheckedModeBanner: false,
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.grey[500],
-        onPressed: () {},
-        child: Icon(
-          Icons.add,
-          size: 50,
-          color: Colors.white,
-        ),
-      ),
-      body: tasks.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Text('No Added Tasks')],
-              ),
-            )
-          : ListView.separated(
-              itemBuilder: (context, index) {
-                final item = tasks[index];
-
-                return Task(item);
-              },
-              separatorBuilder: (context, index) => Divider(),
-              itemCount: tasks.length),
     );
   }
 }

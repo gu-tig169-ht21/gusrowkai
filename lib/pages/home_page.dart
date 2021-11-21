@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../components/tasklist.dart';
+import '../components/task_tile.dart';
 import 'package:provider/provider.dart';
-import '../components/task.dart';
+import '../main.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -15,6 +15,29 @@ class HomePage extends StatelessWidget {
           centerTitle: true,
           backgroundColor: Colors.amberAccent,
           elevation: 0,
+          actions: [
+            PopupMenuButton(
+              onSelected: (filterValue) {
+                Provider.of<MyState>(context, listen: false)
+                    .setFilterOption(filterValue);
+              },
+              icon: const Icon(
+                Icons.menu,
+                color: Colors.black,
+              ),
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  child: Text('All'),
+                  value: 'all',
+                ),
+                const PopupMenuItem(
+                  child: Text('Done'),
+                  value: 'done',
+                ),
+                const PopupMenuItem(child: Text('Undone'), value: 'undone')
+              ],
+            ),
+          ],
         ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.amberAccent,
@@ -28,55 +51,27 @@ class HomePage extends StatelessWidget {
           ),
         ),
         body: Consumer<MyState>(
-            builder: (context, value, child) => value.getTasks.isEmpty
+            builder: (context, state, child) => state.renderTaskList.isEmpty
                 ? Center(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [Text('No Added Tasks')],
-                    ),
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (state.filterValue == 'done') ...[
+                            const Text('No Done Tasks...')
+                          ] else if (state.filterValue == 'undone') ...[
+                            const Text('No Undone Tasks...')
+                          ] else ...[
+                            const Text('No Added Tasks...')
+                          ]
+                        ]),
                   )
-                : TaskList(
-                    value.getTasks,
+                : ListView.separated(
+                    itemCount: state.renderTaskList.length,
+                    itemBuilder: (context, index) {
+                      var task = state.renderTaskList[index];
+                      return TaskTile(task, index);
+                    },
+                    separatorBuilder: (context, index) => const Divider(),
                   )));
-  }
-}
-
-class MyState with ChangeNotifier {
-  final List<Task> _tasks = [];
-
-  List<Task> get getTasks => _tasks;
-
-  onDelete(task) {
-    _tasks.remove(task);
-    notifyListeners();
-  }
-
-  addTask(task) {
-    _tasks.add(Task(text: task));
-    notifyListeners();
-  }
-
-  setCheck(value, task) {
-    task.checkBoxValue = value;
-    notifyListeners();
-  }
-
-  String _textField = "";
-  final _formKey = GlobalKey<FormState>();
-
-  String get getTextField => _textField;
-
-  GlobalKey<FormState> get getFormKey => _formKey;
-
-  bool textFieldIsEmpty(String textField) {
-    return textField.isEmpty;
-  }
-
-  setTextField(todo) {
-    _textField = todo;
-  }
-
-  validateFormState() {
-    return _formKey.currentState!.validate();
   }
 }

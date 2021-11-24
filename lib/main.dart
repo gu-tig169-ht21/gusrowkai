@@ -27,11 +27,16 @@ Widget loadingWidget(BuildContext context) {
         Container(
           width: 80,
           child: const LoadingIndicator(
-            indicatorType: Indicator.ballPulseSync,
+            indicatorType: Indicator.ballSpinFadeLoader,
             colors: [
               Colors.red,
+              Colors.orange,
               Colors.yellow,
+              Colors.green,
+              Colors.lightGreen,
               Colors.blue,
+              Colors.purple,
+              Colors.pink,
             ],
           ),
         )
@@ -57,7 +62,6 @@ class MyState with ChangeNotifier {
 
   getApiKey() async {
     _apiKey = await Internet.fetchApiKey();
-    print(_apiKey.runtimeType);
     loadTasks();
   }
 
@@ -67,7 +71,6 @@ class MyState with ChangeNotifier {
     loadingPhase = false;
 
     _taskList = response;
-    print(_taskList);
     _renderTaskList = _taskList;
     notifyListeners();
   }

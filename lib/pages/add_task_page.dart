@@ -42,8 +42,24 @@ class AddTaskPage extends StatelessWidget {
                   Navigator.of(context).pop();
 
                   final snackBar = SnackBar(
-                    content: const Text('Hi, I am a SnackBar!'),
-                    backgroundColor: (Colors.black),
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                    elevation: 1,
+                    width: MediaQuery.of(context).size.width / 1.1,
+                    content: Row(
+                      children: [
+                        Icon(
+                          Icons.add_task_rounded,
+                          color: Colors.green,
+                        ),
+                        SizedBox(
+                          width: 15,
+                        ),
+                        Text('Successfully added a task')
+                      ],
+                    ),
+                    backgroundColor: (Colors.black87),
                     action: SnackBarAction(
                       label: 'Dismiss',
                       onPressed: () {},

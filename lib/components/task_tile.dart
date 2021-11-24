@@ -48,13 +48,14 @@ class TaskTile extends StatelessWidget {
                             ? Icons.check_circle_outline_sharp
                             : Icons.remove_done_outlined,
                         color: checkValue == true
-                            ? Colors.green
-                            : Colors.blueGrey[200],
+                            ? Colors.lightBlue
+                            : Colors.blueGrey[100],
                       ),
+                      SizedBox(width: 15),
                       Text(
                         checkValue == true
-                            ? 'Task \'${task['title']}\': Set to Done!'
-                            : 'Task \'${task['title']}\': Marked as Undone!',
+                            ? 'Task Set to Done!'
+                            : 'Task Marked as Undone!',
                       )
                     ],
                   ),
@@ -86,6 +87,8 @@ class TaskTile extends StatelessWidget {
             final snackBar = SnackBar(
               behavior: SnackBarBehavior.floating,
               elevation: 1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
               width: MediaQuery.of(context).size.width / 1.1,
               content: Row(
                 children: [
@@ -93,10 +96,11 @@ class TaskTile extends StatelessWidget {
                     Icons.delete,
                     color: Colors.red,
                   ),
-                  Text('Task \'${task['title']}\' Has Been Removed!')
+                  SizedBox(width: 15),
+                  Text('Task Has Been Removed!')
                 ],
               ),
-              backgroundColor: (Colors.black),
+              backgroundColor: (Colors.black87),
               action: SnackBarAction(
                 label: 'Undo',
                 onPressed: () {},

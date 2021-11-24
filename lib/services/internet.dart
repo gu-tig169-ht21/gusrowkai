@@ -6,8 +6,9 @@ class Internet {
     http.Response response = await http.get(
         Uri.parse("https://todoapp-api-pyq5q.ondigitalocean.app/register"));
 
-    var responseObject = response.body;
-    return responseObject;
+    var responseString = response.body;
+
+    return responseString;
   }
 
   static performGetRequest(apiKey) async {

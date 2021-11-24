@@ -50,28 +50,39 @@ class HomePage extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-        body: Consumer<MyState>(
-            builder: (context, state, child) => state.renderTaskList.isEmpty
+        body: SnackBarPage());
+  }
+}
+
+class SnackBarPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<MyState>(
+        builder: (context, state, child) => state.loadingPhase == true
+            ? loadingWidget(context)
+            : state.renderTaskList.isEmpty
                 ? Center(
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           if (state.filterValue == 'done') ...[
-                            const Text('No Done Tasks...')
+                            const Text('No Done Tasks')
                           ] else if (state.filterValue == 'undone') ...[
-                            const Text('No Undone Tasks...')
+                            const Text('No Undone Tasks')
                           ] else ...[
-                            const Text('No Added Tasks...')
+                            const Text('No Added Tasks')
                           ]
                         ]),
                   )
-                : ListView.separated(
-                    itemCount: state.renderTaskList.length,
-                    itemBuilder: (context, index) {
-                      var task = state.renderTaskList[index];
-                      return TaskTile(task, index);
-                    },
-                    separatorBuilder: (context, index) => const Divider(),
-                  )));
+                : Container(
+                    child: ListView.separated(
+                      itemCount: state.renderTaskList.length,
+                      itemBuilder: (context, index) {
+                        var task = state.renderTaskList[index];
+                        return TaskTile(task, index);
+                      },
+                      separatorBuilder: (context, index) => const Divider(),
+                    ),
+                  ));
   }
 }

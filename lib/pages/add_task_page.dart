@@ -38,7 +38,19 @@ class AddTaskPage extends StatelessWidget {
               onPressed: () {
                 if (myStateProvider.validateFormState()) {
                   myStateProvider.addTask(myStateProvider.getTextField);
+
                   Navigator.of(context).pop();
+
+                  final snackBar = SnackBar(
+                    content: const Text('Hi, I am a SnackBar!'),
+                    backgroundColor: (Colors.black),
+                    action: SnackBarAction(
+                      label: 'Dismiss',
+                      onPressed: () {},
+                    ),
+                  );
+
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
               },
               icon: const Icon(Icons.add),

@@ -4,6 +4,7 @@ import 'pages/add_task_page.dart';
 import 'package:provider/provider.dart';
 import '../pages/home_page.dart';
 import './services/internet.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(
@@ -18,10 +19,35 @@ void main() {
   ));
 }
 
+Widget loadingWidget(BuildContext context) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 80,
+          child: const LoadingIndicator(
+            indicatorType: Indicator.ballPulseSync,
+            colors: [
+              Colors.red,
+              Colors.yellow,
+              Colors.blue,
+            ],
+          ),
+        )
+      ],
+    ),
+  );
+}
+
 class MyState with ChangeNotifier {
   MyState() {
     loadTasks();
   }
+
+  var turnary = true;
+
+  var loadingPhase = true;
 
   List<dynamic> _taskList = [];
 
@@ -31,12 +57,17 @@ class MyState with ChangeNotifier {
 
   getApiKey() async {
     _apiKey = await Internet.fetchApiKey();
+    print(_apiKey.runtimeType);
     loadTasks();
   }
 
   loadTasks() async {
     var response = await Internet.performGetRequest(_apiKey);
+
+    loadingPhase = false;
+
     _taskList = response;
+    print(_taskList);
     _renderTaskList = _taskList;
     notifyListeners();
   }

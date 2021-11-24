@@ -22,18 +22,90 @@ class TaskTile extends StatelessWidget {
       leading: SizedBox(
         width: 50,
         height: 50,
-        child: Checkbox(
-            value: task['done'],
-            onChanged: (checkValue) {
-              myStateProvider.changeCheckBoxValue(checkValue, taskIndex);
-            }),
-      ),
-      trailing: IconButton(
-        icon: const Icon(
-          Icons.delete,
-          size: 26,
+        child: Consumer<MyState>(
+          builder: (context, state, child) => Checkbox(
+              value: task['done'],
+              onChanged: (checkValue) {
+                myStateProvider.changeCheckBoxValue(checkValue, taskIndex);
+
+                if (state.turnary == false) {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                }
+
+                state.turnary = false;
+
+                final snackBar = SnackBar(
+                  backgroundColor: Colors.black87,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                  elevation: 1,
+                  width: MediaQuery.of(context).size.width / 1.1,
+                  behavior: SnackBarBehavior.floating,
+                  content: Row(
+                    children: [
+                      Icon(
+                        checkValue == true
+                            ? Icons.check_circle_outline_sharp
+                            : Icons.remove_done_outlined,
+                        color: checkValue == true
+                            ? Colors.green
+                            : Colors.blueGrey[200],
+                      ),
+                      Text(
+                        checkValue == true
+                            ? 'Task \'${task['title']}\': Set to Done!'
+                            : 'Task \'${task['title']}\': Marked as Undone!',
+                      )
+                    ],
+                  ),
+                  action: SnackBarAction(
+                    label: 'Dismiss',
+                    onPressed: () {},
+                  ),
+                );
+
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }),
         ),
-        onPressed: () => myStateProvider.deleteTask(taskIndex),
+      ),
+      trailing: Consumer<MyState>(
+        builder: (context, state, child) => IconButton(
+          icon: const Icon(
+            Icons.delete,
+            size: 26,
+          ),
+          onPressed: () {
+            myStateProvider.deleteTask(taskIndex);
+
+            if (state.turnary == false) {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            }
+
+            state.turnary = false;
+
+            final snackBar = SnackBar(
+              behavior: SnackBarBehavior.floating,
+              elevation: 1,
+              width: MediaQuery.of(context).size.width / 1.1,
+              content: Row(
+                children: [
+                  Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  Text('Task \'${task['title']}\' Has Been Removed!')
+                ],
+              ),
+              backgroundColor: (Colors.black),
+              action: SnackBarAction(
+                label: 'Undo',
+                onPressed: () {},
+              ),
+            );
+
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          },
+        ),
       ),
     );
   }

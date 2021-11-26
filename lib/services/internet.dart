@@ -15,6 +15,10 @@ class Internet {
     http.Response response = await http.get(Uri.parse(
         "https://todoapp-api-pyq5q.ondigitalocean.app/todos?key=$apiKey"));
 
+    if (response.statusCode != 200) {
+      return 'Load Tasks Status: Unsuccessful (Error ${response.statusCode})';
+    }
+
     return jsonDecode(response.body);
   }
 
@@ -24,6 +28,10 @@ class Internet {
             "https://todoapp-api-pyq5q.ondigitalocean.app/todos?key=$apiKey"),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"title": "$textInputValue", "done": false}));
+
+    if (response.statusCode != 200) {
+      return 'Add Task Status: Unsuccessful (Error ${response.statusCode})';
+    }
 
     return jsonDecode(response.body);
   }
@@ -36,12 +44,20 @@ class Internet {
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({"title": textField, "done": checkValue}));
 
+    if (response.statusCode != 200) {
+      return 'Update Task Status: Unsuccessful (Error ${response.statusCode})';
+    }
+
     return jsonDecode(response.body);
   }
 
   static performDeleteRequest(taskToBeRemovedID, apiKey) async {
     http.Response response = await http.delete(Uri.parse(
         "https://todoapp-api-pyq5q.ondigitalocean.app/todos/$taskToBeRemovedID?key=$apiKey"));
+
+    if (response.statusCode != 200) {
+      return 'Delete Task Status: Unsuccessful (Error ${response.statusCode})';
+    }
 
     return jsonDecode(response.body);
   }

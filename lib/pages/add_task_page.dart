@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../main.dart';
+import '../model.dart';
+import '../components/add_task_snackbar.dart';
 
 class AddTaskPage extends StatelessWidget {
   @override
@@ -34,45 +35,24 @@ class AddTaskPage extends StatelessWidget {
                 },
               ),
             ),
-            TextButton.icon(
-              onPressed: () {
-                if (myStateProvider.validateFormState()) {
-                  myStateProvider.addTask(myStateProvider.getTextField);
+            Consumer<MyState>(
+              builder: (context, state, child) => TextButton.icon(
+                onPressed: () {
+                  if (myStateProvider.validateFormState()) {
+                    myStateProvider.addTask(myStateProvider.getTextField);
 
-                  Navigator.of(context).pop();
+                    Navigator.of(context).pop();
 
-                  final snackBar = SnackBar(
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                    elevation: 1,
-                    width: MediaQuery.of(context).size.width / 1.1,
-                    content: Row(
-                      children: [
-                        Icon(
-                          Icons.add_task_rounded,
-                          color: Colors.green,
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Text('Successfully added a task')
-                      ],
-                    ),
-                    backgroundColor: (Colors.black87),
-                    action: SnackBarAction(
-                      label: 'Dismiss',
-                      onPressed: () {},
-                    ),
-                  );
+                    final snackBar = addTaskSnackbar(context);
 
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                }
-              },
-              icon: const Icon(Icons.add),
-              label: const Text('Add'),
-              style: TextButton.styleFrom(
-                primary: Colors.green[300],
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  }
+                },
+                icon: const Icon(Icons.add),
+                label: const Text('Add'),
+                style: TextButton.styleFrom(
+                  primary: Colors.green[300],
+                ),
               ),
             )
           ],

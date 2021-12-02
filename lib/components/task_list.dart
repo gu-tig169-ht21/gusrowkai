@@ -4,6 +4,8 @@ import '../components/task_tile.dart';
 import 'package:provider/provider.dart';
 
 class TaskList extends StatelessWidget {
+  const TaskList({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Consumer<MyState>(

@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'current_task_view_filter_snackbar.dart';
 
 class FiltersButton extends StatelessWidget {
+  const FiltersButton({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Consumer<MyState>(
@@ -12,11 +14,11 @@ class FiltersButton extends StatelessWidget {
           Provider.of<MyState>(context, listen: false)
               .setFilterOption(filterValue);
 
-          if (state.turnary == false) {
+          if (state.maintainCurrentSnackbarInView == false) {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
           }
 
-          state.setTurnary = false;
+          state.setMaintainCurrentSnackbarInView = false;
 
           final snackBar = currentTaskViewFilterSnackbar(context, filterValue);
 

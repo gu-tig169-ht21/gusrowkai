@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
 class LoadingSpinner extends StatelessWidget {
+  const LoadingSpinner({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            width: 80,
+          SizedBox(
+            width: 100,
             child: LoadingIndicator(
               indicatorType: Indicator.ballSpinFadeLoader,
               colors: [

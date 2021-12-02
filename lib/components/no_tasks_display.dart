@@ -3,6 +3,8 @@ import '../model.dart';
 import 'package:provider/provider.dart';
 
 class NoTasksDisplay extends StatelessWidget {
+  const NoTasksDisplay({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Center(

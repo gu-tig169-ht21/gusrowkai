@@ -5,10 +5,10 @@ import '../components/loading_spinner.dart';
 import '../components/filters_button.dart';
 import '../components/no_tasks_display.dart';
 import '../components/task_list.dart';
-//addHideSnackbarForAdd
-//addCurrentFilterView
 
 class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
           centerTitle: true,
           backgroundColor: Colors.amberAccent,
           elevation: 0,
-          actions: [
+          actions: const [
             FiltersButton(),
           ],
         ),
@@ -36,12 +36,11 @@ class HomePage extends StatelessWidget {
           ),
         ),
         body: Consumer<MyState>(
-          builder: (context, state, child) =>
-              state.loadingPhase == true //make this {with if statements}
-                  ? LoadingSpinner() //loadingPage
-                  : state.renderTaskList.isEmpty
-                      ? NoTasksDisplay()
-                      : TaskList(),
+          builder: (context, state, child) => state.loadingPhase
+              ? const LoadingSpinner()
+              : state.renderTaskList.isEmpty
+                  ? const NoTasksDisplay()
+                  : const TaskList(),
         ));
   }
 }

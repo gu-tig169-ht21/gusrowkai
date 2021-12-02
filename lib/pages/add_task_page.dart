@@ -4,6 +4,8 @@ import '../model.dart';
 import '../components/add_task_snackbar.dart';
 
 class AddTaskPage extends StatelessWidget {
+  const AddTaskPage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var myStateProvider = Provider.of<MyState>(context, listen: false);
@@ -40,6 +42,12 @@ class AddTaskPage extends StatelessWidget {
                 onPressed: () {
                   if (myStateProvider.validateFormState()) {
                     myStateProvider.addTask(myStateProvider.getTextField);
+
+                    if (state.maintainCurrentSnackbarInView == false) {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    }
+
+                    state.setMaintainCurrentSnackbarInView = false;
 
                     Navigator.of(context).pop();
 

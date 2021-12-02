@@ -5,7 +5,7 @@ import 'task_deletion_snackbar.dart';
 import 'set_task_check_snackbar.dart';
 
 class TaskTile extends StatelessWidget {
-  TaskTile(this.task, this.taskIndex);
+  const TaskTile(this.task, this.taskIndex, {Key? key}) : super(key: key);
 
   final dynamic task;
   final int taskIndex;
@@ -30,11 +30,11 @@ class TaskTile extends StatelessWidget {
               onChanged: (checkValue) {
                 myStateProvider.changeCheckBoxValue(checkValue, taskIndex);
 
-                if (state.turnary == false) {
+                if (state.maintainCurrentSnackbarInView == false) {
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 }
 
-                state.setTurnary = false;
+                state.setMaintainCurrentSnackbarInView = false;
 
                 final snackBar = setTaskCheckSnackbar(context, checkValue);
 
@@ -51,11 +51,11 @@ class TaskTile extends StatelessWidget {
           onPressed: () {
             myStateProvider.deleteTask(taskIndex);
 
-            if (state.turnary == false) {
+            if (state.maintainCurrentSnackbarInView == false) {
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
             }
 
-            state.setTurnary = false;
+            state.setMaintainCurrentSnackbarInView = false;
 
             final snackBar = taskDeletionSnackbar(context);
 

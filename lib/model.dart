@@ -6,26 +6,21 @@ class MyState with ChangeNotifier {
     loadTasks();
   }
 
-  var _turnary = true;
+  List<dynamic> _taskList = [];
 
-  get turnary => _turnary;
+  get taskList => _taskList;
 
-  set setTurnary(value) {
-    _turnary = value;
+  var _maintainCurrentSnackbarInView = true;
+
+  get maintainCurrentSnackbarInView => _maintainCurrentSnackbarInView;
+
+  set setMaintainCurrentSnackbarInView(value) {
+    _maintainCurrentSnackbarInView = value;
   }
 
   var _loadingPhase = true;
 
   get loadingPhase => _loadingPhase;
-
-  List<dynamic> _taskList = [];
-
-  get taskList => _taskList;
-
-  //create load page
-  bool _loadFail = false;
-
-  get loadFail => _loadFail;
 
   bool _addFail = false;
 
@@ -39,7 +34,7 @@ class MyState with ChangeNotifier {
 
   get deleteFail => _deleteFail;
 
-  String _successStatus = '';
+  String _successStatus = 'Successfully Added Item!';
 
   get successStatus => _successStatus;
 
@@ -53,21 +48,11 @@ class MyState with ChangeNotifier {
   loadTasks() async {
     var response = await Internet.performGetRequest(_apiKey);
 
-    if (response.runtimeType == String) {
-      _loadFail == true;
-
-      _successStatus = response;
-
-      notifyListeners();
-    }
-
     _loadingPhase = false;
 
     _taskList = response;
 
     _renderTaskList = _taskList;
-
-    _successStatus = 'Successfully Fetched Items!';
 
     notifyListeners();
   }
@@ -85,16 +70,18 @@ class MyState with ChangeNotifier {
 
     _taskList = response;
 
-    _successStatus = 'Successfully Added Item!';
-
     notifyListeners();
 
     renderFilterOption();
+
+    _successStatus = 'Successfully Added Item!';
   }
 
   changeCheckBoxValue(checkValue, taskIndex) async {
     var taskToBeUpdatedID = _renderTaskList[taskIndex]['id'];
+
     var taskToBeUpdatedTextfield = _renderTaskList[taskIndex]['title'];
+
     var response = await Internet.performPutRequest(
         taskToBeUpdatedTextfield, checkValue, taskToBeUpdatedID, _apiKey);
 
@@ -107,8 +94,6 @@ class MyState with ChangeNotifier {
     }
 
     _taskList = response;
-
-    _successStatus = 'Successfully Updated Item!';
 
     notifyListeners();
 
@@ -158,6 +143,14 @@ class MyState with ChangeNotifier {
     return _formKey.currentState!.validate();
   }
 
+  String _filterValue = "all";
+
+  get filterValue => _filterValue;
+
+  List<dynamic> _renderTaskList = [];
+
+  get renderTaskList => _renderTaskList;
+
   setFilterOption(filterValue) {
     if (filterValue == 'all') {
       _filterValue = 'all';
@@ -183,12 +176,4 @@ class MyState with ChangeNotifier {
 
     notifyListeners();
   }
-
-  String _filterValue = "all";
-
-  get filterValue => _filterValue;
-
-  List<dynamic> _renderTaskList = [];
-
-  get renderTaskList => _renderTaskList;
 }

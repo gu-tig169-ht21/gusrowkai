@@ -51,6 +51,8 @@ class AddTaskPage extends StatelessWidget {
 
                     Navigator.of(context).pop();
 
+                    state.setFilterOption('all');
+
                     final snackBar = addTaskSnackbar(context);
 
                     ScaffoldMessenger.of(context).showSnackBar(snackBar);

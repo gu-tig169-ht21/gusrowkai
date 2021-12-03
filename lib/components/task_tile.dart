@@ -18,7 +18,8 @@ class TaskTile extends StatelessWidget {
       title: Text.rich(TextSpan(
         text: task['title'],
         style: task['done']
-            ? const TextStyle(decoration: TextDecoration.lineThrough)
+            ? const TextStyle(
+                decoration: TextDecoration.lineThrough, color: Colors.grey)
             : null,
       )),
       leading: SizedBox(
